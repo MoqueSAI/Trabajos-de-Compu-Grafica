@@ -7,7 +7,7 @@ var scene = null,
     renderer = null,
     controls= null;
     /*cube= null,torus = null, mesh = null*/
-    var geometry, material, mesh, figures= [];
+    var geometry, material, mesh, figures= [], light=null;
 
     const size= 30,
     divisions = 30;
@@ -32,30 +32,6 @@ var scene = null,
         controls= new THREE.OrbitControls(camera,renderer.domElement);
         camera.position.set(0,10,1);
         controls.update();
-
-       /* // ----OBJECTS----
-        // figura Cube
-        const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        const material = new THREE.MeshBasicMaterial( { color: 0xFF0000, wireframe: true} );
-         cube = new THREE.Mesh( geometry, material );
-        scene.add( cube );
-
-        // figrua Torus
-        const geometrytorus = new THREE.TorusGeometry( 0.8, 0.1, 5, 20 ); 
-        const materialtorus = new THREE.MeshBasicMaterial( { color: 0xFF0000, wireframe: true } ); 
-        torus = new THREE.Mesh( geometrytorus, materialtorus ); 
-        scene.add( torus );
-        // figura mesh
-        const geometrymesh = new THREE.RingGeometry( 1, 4, 1 ); 
-        const materialmesh = new THREE.MeshBasicMaterial( { color: 0xFF0000, side: THREE.DoubleSide, wireframe: true } );
-         mesh = new THREE.Mesh( geometrymesh, materialmesh ); 
-        scene.add( mesh ); 
-
-        torus.position.x = -8;
-        mesh.position.x= 8;
-        cube.position.x=0;
-        
-        */
         
         camera.position.z = 7;
         //Grid Helper
@@ -68,7 +44,41 @@ var scene = null,
         const axesHelper = new THREE.AxesHelper(5);
         scene.add(axesHelper);
 
+        createLight("ambient");
+        // createLight("spotLight");
+        createLight("pointLight");
         animate();
+    }
+
+    //Function createLight -- crea las luces
+
+    function createLight(typeLight){
+
+        switch (typeLight) {
+            case "ambient":
+                light = new THREE.AmbientLight( 0xffffff); // soft white light
+                scene.add( light );
+              break;
+            case "pointLight":
+                light = new THREE.PointLight( 0xffffff, 0.3, 100 );
+                light.position.set( 0, 10, 0 );
+                scene.add( light );
+    
+                const sphereSize = 1;
+                const pointLightHelper = new THREE.PointLightHelper( light, sphereSize );
+               // scene.add( pointLightHelper );
+              break;
+            case "spotLight":
+                light = new THREE.SpotLight( 0xffffff, 0.5 );
+                light.position.set( 10, 10, 10 );
+                scene.add( light );
+    
+                const spotLightHelper = new THREE.SpotLightHelper( light );
+               // scene.add( spotLightHelper );
+              break;
+          }
+
+
     }
 
  //function createGeometry -- switch case (cube,torus,mesh), que genere la figura en un lugar random
@@ -78,6 +88,7 @@ var scene = null,
     switch (shape){
     case 'cube':
         geometry = new THREE.BoxGeometry( 1, 1, 1 );
+     
         break;
 
     case 'torus':
@@ -92,8 +103,26 @@ var scene = null,
             console.error('Figura no encontrada');
             return;
      }
+     
+        const texture = new THREE.TextureLoader().load('../images/animals/face1.jpg' ); 
+        material = [new THREE.MeshStandardMaterial({color: 0xFFFFFF, 
+            map:texture,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 1, 
+            wireframe: false,
+            wireframeLinewidth: 6}),
+            new THREE.MeshStandardMaterial ({map:new THREE.TextureLoader().load('../images/animals/face1.jpg')}),
+            new THREE.MeshStandardMaterial ({map:new THREE.TextureLoader().load('../images/animals/face2.png')}),
+            new THREE.MeshStandardMaterial ({map:new THREE.TextureLoader().load('../images/animals/face3.jpg')}),
+            new THREE.MeshStandardMaterial ({map:new THREE.TextureLoader().load('../images/animals/face4.jpg')}),
+            new THREE.MeshStandardMaterial ({map:new THREE.TextureLoader().load('../images/animals/face5.png')}),
+            new THREE.MeshStandardMaterial ({map:new THREE.TextureLoader().load('../images/animals/face6.jpg')})];
 
-        material = new THREE.MeshBasicMaterial({color: 0xFF0000, wireframe: true});
+        
+        
+        
+            
         mesh = new THREE.Mesh(geometry,material);
         mesh.position.x = (Math.random() -  0.5)* size ;
         mesh.position.z = (Math.random() -  0.5)* size ;
