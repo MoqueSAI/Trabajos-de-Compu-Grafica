@@ -1,6 +1,6 @@
 /*Autor: Nicolás Toro Echeverri
 Fecha de creación: 23/08/2023 9:33 am
-Ultima modificación:30/08/2023 9:22 am */
+Ultima modificación:31/08/2023 10:21 pm */
 
 var scene = null,
     camera = null,
@@ -16,7 +16,7 @@ var scene = null,
         //Scene, camera, renderer
 
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xC8C8C8);
+        scene.background = new THREE.Color(0x151718);
         camera = new THREE.PerspectiveCamera( 
             75,                                 // ángulo de visión (abajo o arriba)
             window.innerWidth / window.innerHeight,   // relación de aspecto 16:9
@@ -60,7 +60,7 @@ var scene = null,
                 scene.add( light );
               break;
             case "pointLight":
-                light = new THREE.PointLight( 0xffffff, 0.3, 100 );
+                light = new THREE.PointLight( 0xffffff, 1, 100 );
                 light.position.set( 0, 10, 0 );
                 scene.add( light );
     
@@ -69,11 +69,11 @@ var scene = null,
                // scene.add( pointLightHelper );
               break;
             case "spotLight":
-                light = new THREE.SpotLight( 0xffffff, 0.5 );
+                light = new THREE.SpotLight( 0xffffff);
                 light.position.set( 10, 10, 10 );
                 scene.add( light );
     
-                const spotLightHelper = new THREE.SpotLightHelper( light );
+                // const spotLightHelper = new THREE.SpotLightHelper( light );
                // scene.add( spotLightHelper );
               break;
           }
@@ -87,24 +87,59 @@ var scene = null,
     
     switch (shape){
     case 'cube':
+        const texture = new THREE.TextureLoader().load('../images/animals/face1.jpg');
+        var materialCube = [new THREE.MeshBasicMaterial ({map:new THREE.TextureLoader().load('../images/animals/face1.jpg')}),
+                                new THREE.MeshBasicMaterial ({map:new THREE.TextureLoader().load('../images/animals/face2.png')}),
+                                new THREE.MeshBasicMaterial ({map:new THREE.TextureLoader().load('../images/animals/face3.jpg')}),
+                                new THREE.MeshBasicMaterial ({map:new THREE.TextureLoader().load('../images/animals/face4.jpg')}),
+                                new THREE.MeshBasicMaterial ({map:new THREE.TextureLoader().load('../images/animals/face5.png')}),
+                                new THREE.MeshBasicMaterial ({map:new THREE.TextureLoader().load('../images/animals/face6.jpg')})];
         geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        material = new THREE.MeshBasicMaterial({ color: 0xffffff, 
+            transparent: true,
+            opacity: 1,
+            side: THREE.DoubleSide,
+            map:texture,
+            wireframe: false});
+        mesh = new THREE.Mesh(geometry, materialCube);
      
         break;
 
     case 'torus':
-         geometry = new THREE.TorusGeometry( 0.8, 0.1, 5, 20 ); 
+         geometry = new THREE.TorusGeometry( 1, 0.15, 120, 50 ); 
+         material = new THREE.MeshPhongMaterial({ color: 0xf2E103A,
+            transparent:true,
+            specular: 0xf102B3A,
+            opacity:1});
+            mesh = new THREE.Mesh(geometry, material);
         break;
 
-    case 'ring':
-        geometry = new THREE.RingGeometry( 1, 1.5, 1 ); 
+    case 'cone':
+        geometry = new THREE.ConeGeometry( 1, 2, 50 ); 
+        material = new THREE.MeshPhongMaterial( {color: 0xf102B3A,
+        transparent:true,
+        specular: 0xf2E103A,
+        opacity: 1} );
+        mesh = new THREE.Mesh(geometry, material ); scene.add( mesh);
         break;
+
 
         default:
             console.error('Figura no encontrada');
             return;
      }
+
+    const x = (Math.random() - 0.5) * size;
+    const y = Math.random() * 5;
+    const z = (Math.random() - 0.5) * size;
+
+    mesh.position.set(x, y, z);
+    scene.add(mesh);
+
+    figures.push(mesh);
      
-        const texture = new THREE.TextureLoader().load('../images/animals/face1.jpg' ); 
+        /* const texture = new THREE.TextureLoader().load('../images/animals/face1.jpg' ); 
+    
         material = [new THREE.MeshStandardMaterial({color: 0xFFFFFF, 
             map:texture,
             side: THREE.DoubleSide,
@@ -129,7 +164,7 @@ var scene = null,
         scene.add (mesh);
 
         figures.push(mesh);
-
+ */
        
    }
 
@@ -142,9 +177,20 @@ var scene = null,
     for(let i=0; i<figures.length; i++){  /* Se creó un arreglo con la variable figures=[] para almacenar la animacion de la figura anterior y así no se detenga (arreglo) */
         figures[i].rotation.x += 0.03;
         figures[i].rotation.y += 0.03;
+     
     }
     
     }
+
+    function clearScene() {
+        // Remove all shapes from the scene.
+        scene.children.forEach(child => {
+            if (child instanceof THREE.Mesh) {
+                scene.remove(child);
+            }
+        });
+    }
+    
 
    
     window.addEventListener( 'resize', onWindowResize, false );
