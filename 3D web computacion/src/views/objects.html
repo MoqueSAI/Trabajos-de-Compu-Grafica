@@ -23,8 +23,8 @@
    
  <!--Three JS-->
  <!-- <script src="../libs/three.js"></script> -->
- <script src="../libs/three.min.js"></script>
- <script src="../libs/OrbitControls.js"></script>
+ <script src="../libs/vendors/three.js-master/build/three.min.js"></script>
+ <script src="../libs/vendors/controls/OrbitControls.js"></script>
  <script src="../js/main.js"></script>
 
 
@@ -61,8 +61,7 @@ button {
 
             <button onclick ="CreateGeometry('cube')">Cube</button>
             <button onclick ="CreateGeometry('torus')">Torus</button>
-            <button onclick ="CreateGeometry('cone')">Cone</button>
-            <button onclick = "clearScene()">Clean</button>
+            <button onclick ="CreateGeometry('ring')">Mesh</button>
 
         </div>
     </nav>
@@ -70,8 +69,8 @@ button {
     <canvas style="width: 100%;"   id="app"></canvas>
     <!--Footer-->
     <div class="container">
-        <footer class="bg-dark text-white text-center py-3 fixed-bottom">
-            <p > © 2023 - Nicolás Toro Echeverri </p>  
+        <footer class="navbar fixed-bottom mt-auto bg-light text-center text-lg-start">
+            <p class="text-center text-muted"> &nbsp; © 2023 - Nicolás Toro Echeverri </p>
         </footer>
     </div>
 
