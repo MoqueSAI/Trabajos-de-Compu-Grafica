@@ -105,24 +105,21 @@ function loadModel_objMtl(){
             // object.scale.set(3,3,3);
         });
     });
+    }
 
 
+    //load GLTF
+  
+    const gltfLoader = new THREE.GLTFLoader();
+gltfLoader.load('../models/gltf/other/Duck.gltf', (gltf) => {   
+    const duck = gltf.scene; // El objeto 3D del pato
 
+    // position
+    const newPosition = new THREE.Vector3(0, 0, -3); // Cambia x, y, z a las coordenadas deseadas
 
-    // Load gtlf
-    var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setResourcePath("../models/gltf/Personaje/Duck.gltf");
-    mtlLoader.setPath("../models/obj_mtl/Personaje/");
-    mtlLoader.load("Duck.gltf", function (materials) {
-        materials.preload();
+    // Aplly the position 
+    duck.position.copy(newPosition);
 
-        // Load OBJ
-        var objLoader = new THREE.OBJLoader();
-        objLoader.setPath("../models/Personaje/Duck0.bin");
-        objLoader.setMaterials(materials);
-        objLoader.load("Duck0.bin", function (object) {
-            scene.add(object);
-            // object.scale.set(3,3,3);
-        });
-    });
-}
+    scene.add(duck);
+});
+    
