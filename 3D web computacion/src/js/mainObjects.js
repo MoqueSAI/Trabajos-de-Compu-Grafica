@@ -24,11 +24,11 @@ var scene = null,
     
         //ORBIT CONTROLS
         controls= new THREE.OrbitControls(camera,renderer.domElement);
-        camera.position.set(0,10,1);
+        camera.position.set(4.2,3.8,-6.3);
         controls.update();
 
         
-        camera.position.z = 7;
+       
         //Grid Helper
         //const gridHelper = new THREE.GridHelper( size, divisions );
         //scene.add(gridHelper);
@@ -69,6 +69,7 @@ scene.add( lightt );
         loadGltf('../models/gltf/other/', 'Duck.gltf');
 
         createCollectibles();
+        stateGame('lose');
 
 
     }
@@ -79,6 +80,7 @@ scene.add( lightt );
         controls.update();
         renderer.render(scene,camera);
         
+        //console.log(camera.position);
         }
 
      window.addEventListener( 'resize', onWindowResize, false );
@@ -171,14 +173,36 @@ function loadGltf(path, nameGltfGet) {
     );
 }
 
-function createCollectibles(){
-   const texture = new THREE.TextureLoader().load('../images/paperGift.jpg');
+function createCollectibles() {
+    const min = -2;
+    const max = 3;
+    for (var i = 0; i < 3; i++) {
+        var posx = Math.floor(Math.random() * (max - min + 1) + min);
+        var posz = Math.floor(Math.random() * (max - min + 1) + min);
 
-    const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, 
-                                                    map:texture});
-    const cube = new THREE.Mesh( geometry, material ); 
+        const texture = new THREE.TextureLoader().load('../images/paperGift.jpg');
+        const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map:texture});
+        const cube = new THREE.Mesh( geometry, material ); 
+        cube.position.set(posx,0.6,posz);
+        scene.add( cube );
 
-    cube.position.set(2, 0.6,-1);
-    scene.add( cube );
+        console.log(i);
+    }
+}
+
+function stateGame(state) {
+    switch(state) {
+        case 'win':
+            // audio & show img
+            document.getElementById("winpage").style.display = "block";
+          break;
+        case 'lose':
+            // audio & show img
+            document.getElementById("losepage").style.display = "block";
+          break;
+          default:
+            document.getElementById("winpage").style.display = "none";
+            document.getElementById("losepage").style.display = "none";
+      }
 }

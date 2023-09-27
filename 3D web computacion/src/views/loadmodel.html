@@ -40,20 +40,22 @@
 
 <body onload="startScene()">
     <!--Header-->
-    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
-        <div class="container">
-            <a class="navbar-brand" href="../../indexhtml">
-                <img src="../images/Icon.png" alt="Bootstrap" width="100%" height="30">
+    <body onload="startScene()">
+        <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="justify-content: center;">
+            <a class="navbar-brand" href="#" style="color:white">
+                <div class="container text-center">
+                    <div class="row">
+                      <div class="col">
+                        <h1>Points: 0 |</h1>
+                      </div>
+                      <div class="col">
+                        <h1>Time: 60</h1>
+                      </div>
+                    </div>
+                  </div>
+    
             </a>
-            <div></div>
-            <!--Autoplay the background-->
-            <audio autoplay id="myBackGroundSound">
-                <source src="../sounds/Sound ambient game.mp3" type="audio/ogg">
-                Your browser does not support the audio element.
-            </audio>
-
-        </div>
-    </nav>
+        </nav>
 
     <div id="winpage" style="display: none;"></div>
     <div id="losepage" style="display: none;"></div>
