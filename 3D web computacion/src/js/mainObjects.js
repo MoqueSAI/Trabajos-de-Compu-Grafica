@@ -66,7 +66,9 @@ scene.add( lightt );
          // Escenario
         loadModel_objMtl("../models/obj_mtl/escenario/","Escenario.obj","Escenario.mtl");
          // Duck Model
-    loadGltf('../models/gltf/other/', 'Duck.gltf');
+        loadGltf('../models/gltf/other/', 'Duck.gltf');
+
+        createCollectibles();
 
 
     }
@@ -169,6 +171,14 @@ function loadGltf(path, nameGltfGet) {
     );
 }
 
-function playSound(){
-    
+function createCollectibles(){
+   const texture = new THREE.TextureLoader().load('../images/paperGift.jpg');
+
+    const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, 
+                                                    map:texture});
+    const cube = new THREE.Mesh( geometry, material ); 
+
+    cube.position.set(2, 0.6,-1);
+    scene.add( cube );
 }
