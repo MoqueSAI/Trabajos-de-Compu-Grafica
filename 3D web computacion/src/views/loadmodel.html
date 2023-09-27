@@ -1,31 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="../images/Icon.png" type="image/png">
     <title>Models - Load 3D</title>
-     <!-- Style Bootstrap-->
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-     integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
- <!--Js or logic functions of Bootstrap-->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"crossorigin="anonymous"></script>
- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"crossorigin="anonymous"></script>
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"crossorigin="anonymous"></script>
-     
-<script src="../libs/vendors/three.js-master/build/three.min.js"></script>
-<script src="../libs/vendors/controls/OrbitControls.js"></script>
+    <!-- Style Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!--Js or logic functions of Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+        crossorigin="anonymous"></script>
 
-<!-- OBJ Y MTL-->
-<script src="../libs/vendors/load/OBJLoader.js"></script>
-<script src="../libs/vendors/load/MTLLoader.js"></script>
-<!-- DRACOL Y GLTF-->
-<script src="../libs/vendors/load/DRACOLoader.js"></script>
-<script src="../libs/vendors/load/GLTFLoader.js"></script>
+    <link rel="stylesheet" href="../css/main.css">
 
-<script src="../js/mainObjects.js"></script>
-     
+    <script src="../libs/vendors/three.js-master/build/three.min.js"></script>
+    <script src="../libs/vendors/controls/OrbitControls.js"></script>
+
+    <!-- OBJ Y MTL-->
+    <script src="../libs/vendors/load/OBJLoader.js"></script>
+    <script src="../libs/vendors/load/MTLLoader.js"></script>
+    <!-- DRACOL Y GLTF-->
+    <script src="../libs/vendors/load/DRACOLoader.js"></script>
+    <script src="../libs/vendors/load/GLTFLoader.js"></script>
+
+    <script src="../js/mainObjects.js"></script>
+
 
 </head>
+
 <body onload="startScene()">
     <!--Header-->
     <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
@@ -33,20 +45,19 @@
             <a class="navbar-brand" href="../../indexhtml">
                 <img src="../images/Icon.png" alt="Bootstrap" width="100%" height="30">
             </a>
-
-
-            <audio controls>
+            <div></div>
+            <!--Autoplay the background-->
+            <audio autoplay id="myBackGroundSound">
                 <source src="../sounds/Sound ambient game.mp3" type="audio/ogg">
-                <source src="horse.mp3" type="audio/mpeg">
-              Your browser does not support the audio element.
-              </audio>
+                Your browser does not support the audio element.
+            </audio>
 
         </div>
     </nav>
 
-   
-      
-    
+    <div id="winpage" style="display: block;"></div>
+    <div id="losepage" style="display: none;"></div>
+
     <canvas style="width: 100%;" id="model"></canvas>
 
     <!--Footer-->
@@ -56,6 +67,7 @@
         </footer>
     </div>
 
-    
+
 </body>
+
 </html>

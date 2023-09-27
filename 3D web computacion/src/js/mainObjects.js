@@ -168,3 +168,7 @@ function loadGltf(path, nameGltfGet) {
         }
     );
 }
+
+function playSound(){
+    
+}
