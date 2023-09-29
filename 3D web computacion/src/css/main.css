@@ -9,9 +9,11 @@
     background-repeat: no-repeat;
     padding: 5%;
     z-index: 5;
+    z-index: 9999; /* Valor más alto para estar por encima de todo */
+    display: none; /* Inicialmente oculto */
 }
 
-#losepage{
+#losepage {
     position: absolute;
     background-image: url('../images/ducks/FOTO PATOS-2.png');
     width: 100%;
@@ -20,6 +22,13 @@
     background-position: center;
     background-repeat: no-repeat;
     padding: 5%;
-    z-index: 5;
-
+    z-index: 9999; /* Valor más alto para estar por encima de todo */
+    display: none; /* Inicialmente oculto */
+}
+#timer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }

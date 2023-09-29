@@ -38,27 +38,33 @@
 
 </head>
 
-<body onload="startScene()">
     <!--Header-->
     <body onload="startScene()">
         <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="justify-content: center;">
             <a class="navbar-brand" href="#" style="color:white">
                 <div class="container text-center">
                     <div class="row">
-                      <div class="col">
-                        <h1>Points: 0 |</h1>
-                      </div>
-                      <div class="col">
-                        <h1>Time: 60</h1>
-                      </div>
+                        <div class="col">
+                            <h1>Points: 0 |</h1>
+                        </div>
+                        <div class="col">
+                            <div id="timer-container">
+                                <h1>Tiempo: <span id="countdown">60</span></h1>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-    
+                </div>
             </a>
         </nav>
 
     <div id="winpage" style="display: none;"></div>
     <div id="losepage" style="display: none;"></div>
+
+     <!-- Load audio -->
+     <audio autoplay loop> 
+        <source src="../sounds/Sound ambient game.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
 
     <canvas style="width: 100%;" id="model"></canvas>
 

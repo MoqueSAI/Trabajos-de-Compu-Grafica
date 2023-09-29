@@ -5,7 +5,7 @@ var scene = null,
 
     const size= 30,
     divisions = 30;
-
+    let timeLeft = 60; // Define el tiempo inicial en segundos
     function startScene() {
         //Scene, camera, renderer
 
@@ -27,21 +27,11 @@ var scene = null,
         camera.position.set(4.2,3.8,-6.3);
         controls.update();
 
-        
-       
-        //Grid Helper
-        //const gridHelper = new THREE.GridHelper( size, divisions );
-        //scene.add(gridHelper);
-
-        //Axes helper
-        //const axesHelper = new THREE.AxesHelper(5);
-        //scene.add(axesHelper);
-
         const rende = new THREE.WebGLRenderer();
-rende.shadowMap.enabled = true;
-rende.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+        rende.shadowMap.enabled = true;
+        rende.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 
-//Create a PointLight and turn on shadows for the light
+        //Create a PointLight and turn on shadows for the light
 const light = new THREE.PointLight( 0xffffff, 1, 100 );
 light.position.set( 0, 10, 4 );
 light.castShadow = true; // default false
@@ -69,9 +59,14 @@ scene.add( lightt );
         loadGltf('../models/gltf/other/', 'Duck.gltf');
 
         createCollectibles();
-        stateGame('lose');
+        stateGame();
 
-
+         // Establecer la duración del temporizador en segundos (por ejemplo, 60 segundos)
+    const duration = 60;
+    // Especificar el elemento donde se mostrará la cuenta regresiva
+    const countdownElement = document.getElementById('countdown');
+    startTimer(duration, countdownElement);
+     
     }
 
     function animate(){
@@ -113,21 +108,6 @@ function loadModel_objMtl(){
     });
     }
 
-
-    //load GLTF
-  
-    //const gltfLoader = new THREE.GLTFLoader();
-//gltfLoader.load('../models/gltf/other/Duck.gltf', (gltf) => {   
-    //const duck = gltf.scene; // El objeto 3D del pato
-
-    // position
-    //const newPosition = new THREE.Vector3(0, 0, -3); // Cambia x, y, z a las coordenadas deseadas
-
-    // Aplly the position 
-    //duck.position.copy(newPosition);
-
-    //scene.add(duck);
-//});
 
 function loadGltf(path, nameGltfGet) {
     var nameGltf = path + nameGltfGet;
@@ -200,9 +180,38 @@ function stateGame(state) {
         case 'lose':
             // audio & show img
             document.getElementById("losepage").style.display = "block";
+            
           break;
           default:
             document.getElementById("winpage").style.display = "none";
             document.getElementById("losepage").style.display = "none";
       }
 }
+
+
+// Define una función para iniciar el temporizador
+function startTimer(duration, display) {
+    let timer = duration;
+    const countdown = document.getElementById('countdown');
+
+    function updateTimer() {
+        countdown.textContent = timer;
+        if (timer <= 0) {
+            // Detener el temporizador
+            clearInterval(interval);
+            // Mostrar #losepage
+            const losepage = document.getElementById('losepage');
+            losepage.style.display = 'block';
+        }
+        timer--;
+    }
+
+    // Actualizar el temporizador inicialmente
+    updateTimer();
+
+    // Establecer un intervalo para actualizar el temporizador cada 1000 milisegundos (1 segundo)
+    const interval = setInterval(updateTimer, 1000);
+}
+
+
+
