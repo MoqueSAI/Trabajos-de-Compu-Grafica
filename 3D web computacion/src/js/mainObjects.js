@@ -1,95 +1,105 @@
 var scene = null,
     camera = null,
     renderer = null,
-    controls= null;
+    controls = null;
 
-    const size= 30,
+const size = 30,
     divisions = 30;
-    let timeLeft = 60; // Define el tiempo inicial en segundos
-    function startScene() {
-        //Scene, camera, renderer
+let timeLeft = 60; // Define el tiempo inicial en segundos
 
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xC8C8C8);
-        camera = new THREE.PerspectiveCamera( 
-            75,                                 // ángulo de visión (abajo o arriba)
-            window.innerWidth / window.innerHeight,   // relación de aspecto 16:9
-            0.1,                                      // mas cerca(no renderiza)
-            1000 );                                   // mas lejos(no renderiza)
+//Avatar 
+var myPlayer = null,
+    myPlayerMesh = null,
+    input = { left: 0, right: 0, up: 0, down: 0 },
+    rootSpeed = 0.05,
+    speed = 0.5;
+function startScene() {
+    //Scene, camera, renderer
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xC8C8C8);
+    camera = new THREE.PerspectiveCamera(
+        75,                                 // ángulo de visión (abajo o arriba)
+        window.innerWidth / window.innerHeight,   // relación de aspecto 16:9
+        0.1,                                      // mas cerca(no renderiza)
+        1000);                                   // mas lejos(no renderiza)
         
-        renderer = new THREE.WebGLRenderer({canvas: document.getElementById('model')});
-        renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('model') });
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-        document.body.appendChild( renderer.domElement );
-    
-        //ORBIT CONTROLS
-        controls= new THREE.OrbitControls(camera,renderer.domElement);
-        camera.position.set(4.2,3.8,-6.3);
-        controls.update();
+    document.body.appendChild(renderer.domElement);
 
-        const rende = new THREE.WebGLRenderer();
-        rende.shadowMap.enabled = true;
-        rende.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+    //ORBIT CONTROLS
+    //controls= new THREE.OrbitControls(camera,renderer.domElement);
+    //camera.position.set(4.2,3.8,5);   //(4.2,3.8,-6.3);
+    //controls.update();
 
-        //Create a PointLight and turn on shadows for the light
-const light = new THREE.PointLight( 0xffffff, 1, 100 );
-light.position.set( 0, 10, 4 );
-light.castShadow = true; // default false
-scene.add( light );
+    camera.position.set(0,2.7,-10);   //(4.2,3.8,-6.3);
+    camera.rotation.y += Math.PI;
 
-//Set up shadow properties for the light
-light.shadow.mapSize.width = 512; // default
-light.shadow.mapSize.height = 512; // default
-light.shadow.camera.near = 0.5; // default
-light.shadow.camera.far = 500; // default
+    const rende = new THREE.WebGLRenderer();
+    rende.shadowMap.enabled = true;
+    rende.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 
-const lightt = new THREE.AmbientLight( 0x404040 ); // soft white light
-scene.add( lightt );
+    //Create a PointLight and turn on shadows for the light
+    const light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(0, 10, 4);
+    light.castShadow = true; // default false
+    scene.add(light);
 
+    //Set up shadow properties for the light
+    light.shadow.mapSize.width = 512; // default
+    light.shadow.mapSize.height = 512; // default
+    light.shadow.camera.near = 0.5; // default
+    light.shadow.camera.far = 500; // default
 
-        
-        //const light = new THREE.AmbientLight( 0xFFFFFF ); // soft white light
-        //scene.add( light );
+    const lightt = new THREE.AmbientLight(0x404040); // soft white light
+    scene.add(lightt);
 
 
-        animate();
-         // Escenario
-        loadModel_objMtl("../models/obj_mtl/escenario/","Escenario.obj","Escenario.mtl");
-         // Duck Model
-        loadGltf('../models/gltf/other/', 'Duck.gltf');
 
-        createCollectibles();
-        stateGame();
+    //const light = new THREE.AmbientLight( 0xFFFFFF ); // soft white light
+    //scene.add( light );
 
-         // Establecer la duración del temporizador en segundos (por ejemplo, 60 segundos)
+
+    animate();
+    // Escenario
+    loadModel_objMtl("../models/obj_mtl/escenario/", "Escenario.obj", "Escenario.mtl");
+    // Duck Model
+    loadGltf('../models/gltf/other/', 'Duck.gltf');
+
+    createCollectibles();
+    stateGame();
+
+    // Establecer la duración del temporizador en segundos (por ejemplo, 60 segundos)
     const duration = 60;
     // Especificar el elemento donde se mostrará la cuenta regresiva
     const countdownElement = document.getElementById('countdown');
     startTimer(duration, countdownElement);
-     
-    }
 
-    function animate(){
+    createPlayer();
+}
 
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene,camera);
-        
-        //console.log(camera.position);
-        }
+function animate() {
 
-     window.addEventListener( 'resize', onWindowResize, false );
+    requestAnimationFrame(animate);
+    //controls.update();
+    renderer.render(scene, camera);
+    movementPlayer();
+}
 
-    function onWindowResize(){
+window.addEventListener('resize', onWindowResize, false);
+
+function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
 }
 
-function loadModel_objMtl(){
+function loadModel_objMtl() {
     // Load MTL
     var mtlLoader = new THREE.MTLLoader();
     mtlLoader.setResourcePath("../models/obj_mtl/escenario/");
@@ -104,9 +114,10 @@ function loadModel_objMtl(){
         objLoader.load("Escenario.obj", function (object) {
             scene.add(object);
             // object.scale.set(3,3,3);
+
         });
     });
-    }
+}
 
 
 function loadGltf(path, nameGltfGet) {
@@ -128,7 +139,7 @@ function loadGltf(path, nameGltfGet) {
         function (gltf) {
 
             scene.add(gltf.scene);
-
+           
             gltf.animations; // Array<THREE.AnimationClip>
             gltf.scene; // THREE.Group
             gltf.scenes; // Array<THREE.Group>
@@ -136,7 +147,10 @@ function loadGltf(path, nameGltfGet) {
             gltf.asset; // Object
 
             gltf.scene.position.set(0, 0, -3);
-
+            
+                myPlayerMesh = gltf.asset;
+                myPlayerMesh.rotation.y = Math.PI;
+                myPlayerMesh.position.set(camera.position.x,camera.position.y+3 ,camera.position.z-10);
         },
         // called while loading is progressing
         function (xhr) {
@@ -161,31 +175,31 @@ function createCollectibles() {
         var posz = Math.floor(Math.random() * (max - min + 1) + min);
 
         const texture = new THREE.TextureLoader().load('../images/paperGift.jpg');
-        const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
-        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map:texture});
-        const cube = new THREE.Mesh( geometry, material ); 
-        cube.position.set(posx,0.6,posz);
-        scene.add( cube );
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(posx, 0.6, posz);
+        scene.add(cube);
 
         console.log(i);
     }
 }
 
 function stateGame(state) {
-    switch(state) {
+    switch (state) {
         case 'win':
             // audio & show img
             document.getElementById("winpage").style.display = "block";
-          break;
+            break;
         case 'lose':
             // audio & show img
             document.getElementById("losepage").style.display = "block";
-            
-          break;
-          default:
+
+            break;
+        default:
             document.getElementById("winpage").style.display = "none";
             document.getElementById("losepage").style.display = "none";
-      }
+    }
 }
 
 
@@ -213,5 +227,84 @@ function startTimer(duration, display) {
     const interval = setInterval(updateTimer, 1000);
 }
 
+function createPlayer() {
 
+    console.log("create player");
+
+    const geometry = new THREE.BoxGeometry(2.5, -3, 2);
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    myPlayer = new THREE.Mesh(geometry, material);
+    scene.add(myPlayer);
+    myPlayer.position.set(camera.position.x,camera.position.y,camera.position.z);
+
+
+}
+
+function movementPlayer() {
+
+    console.log("VALORRRRR"+myPlayerMesh);
+
+
+    if(input.right == 1){ // Rotation Right
+        camera.rotation.y -= rootSpeed;
+        myPlayer.rotation.y -= rootSpeed;
+        // myPlayerMesh.rotation.y -= rootSpeed;
+    } else if(input.left == 1) { // Rotation left
+        camera.rotation.y += rootSpeed;
+        myPlayer.rotation.y += rootSpeed;
+        // myPlayerMesh.rotation.y += rootSpeed;
+    } else if(input.up == 1){ // movement up
+        camera.position.z -= Math.cos(camera.rotation.y) * speed;
+        camera.position.z -= Math.sin(camera.rotation.y) * speed;
+        myPlayer.position.z -= Math.cos(camera.rotation.y) * speed;
+        myPlayer.position.z -= Math.sin(camera.rotation.y) * speed;
+        // myPlayerMesh.position.z -= Math.cos(camera.rotation.y) * speed;
+        // myPlayerMesh.position.z -= Math.sin(camera.rotation.y) * speed;
+    } else if(input.down == 1){ // movement down
+        camera.position.z += Math.cos(camera.rotation.y) * speed;
+        camera.position.z += Math.sin(camera.rotation.y) * speed;
+        myPlayer.position.z += Math.cos(camera.rotation.y) * speed;
+        myPlayer.position.z += Math.sin(camera.rotation.y) * speed;
+        // myPlayerMesh.position.z += Math.cos(camera.rotation.y) * speed;
+        // myPlayerMesh.position.z += Math.sin(camera.rotation.y) * speed;
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    console.log("Undi: " + e.keyCode);
+
+    switch (e.keyCode) {
+        case 68: // Derecha
+            input.right = 1;
+            break;
+        case 65: // Izquierda
+            input.left = 1;
+            break;
+        case 87: // Ariba
+            input.up = 1;
+            break;
+        case 83: // Abajo
+            input.down = 1;
+            break;
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    console.log("Solte: " + e.keyCode);
+
+    switch (e.keyCode) {
+        case 68: // Derecha
+            input.right = 0;
+            break;
+        case 65: // Izquierda
+            input.left = 0;
+            break;
+        case 87: // Ariba
+            input.up = 0;
+            break;
+        case 83: // Abajo
+            input.down = 0;
+            break;
+    }
+});
 
